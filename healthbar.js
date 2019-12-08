@@ -82,22 +82,22 @@ pushEvent({
 }, $scope.segments)
 
 function pushEvent(event, segments) {
-  const myEvent = {
-    timestamp: moment(event.timestamp),
+  const newInterval = {
+    start: moment(event.timestamp),
     value: event.value,
   }
   for (let i = 0; i < segments.length; i++) {
     const intervals = segments[i].intervals
     for (let j = 0; j < intervals.length; j++) {
       const interval = intervals[j]
-      if (interval.start.isAfter(myEvent.timestamp)) {
+      if (interval.start.isAfter(newInterval.start)) {
         if (j >= 1) {
           // Splicing in
-          segments[i].intervals.splice(j - 1, myEvent)
+          segments[i].intervals.splice(j - 1, newInterval)
         } else {
           if (i >= 1) {
             // Or push at end of previous segment
-            segments[i - 1].intervals.push(myEvent)
+            segments[i - 1].intervals.push(newInterval)
           }
         }
         return
@@ -105,7 +105,7 @@ function pushEvent(event, segments) {
     }
   }
   // Reached end, so push at end
-  segments[segments.length - 1].intervals.push(myEvent)
+  segments[segments.length - 1].intervals.push(newInterval)
 }
 
 // Computing interval widths
@@ -122,7 +122,7 @@ for (let i = $scope.segments.length - 1; i >= 0; i--) { // Going back in time
     previousStart = interval.start.clone()
   }
 }
-// Filling in left (for absoulte positioning)
+// Filling in left (for absolute positioning)
 $scope.segments.forEach(seg => {
   let leftPct = 0;
   seg.intervals.forEach(interval => {
