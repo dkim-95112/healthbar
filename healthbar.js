@@ -141,7 +141,7 @@ $scope.segments.forEach(seg => {
   })
 })
 
-function getFromDate(startDateString) {
+$scope.getFromDate = (startDateString) => {
   let targetStatus
   let targetStart
   for (let i = $scope.segments.length - 1; i >= 0; i--) {
@@ -161,9 +161,7 @@ function getFromDate(startDateString) {
   return targetStart
 }
 
-getFromDate('2019-12-01T05:00:00.000Z')
-
-function getToDate(startDateString) {
+$scope.getToDate = (startDateString) => {
   let targetStatus
   let targetEnd
   for (let i = 0; i < $scope.segments.length; i++) {
@@ -180,9 +178,7 @@ function getToDate(startDateString) {
       targetEnd = interval.end
     }
   }
-  // Reaching end
   return targetEnd
 }
 
-getToDate(' 2019-12-08T19:49:40.213Z')
 debugger
