@@ -117,7 +117,7 @@ for (let i = $scope.segments.length - 1; i >= 0; i--) { // Going back in time
   for (let j = intervals.length - 1; j >= 0; j--) {
     const interval = intervals[j]
     interval.end = previousStart.subtract(moment.duration(1))
-    console.log(`ivl ${j}: ${interval.start.toString()} - ${interval.end.toString()}`)
+    console.log(`ivl ${j}: ${interval.start.toISOString()} - ${interval.end.toISOString()}`)
     interval.percentage = 100 * interval.end.diff(interval.start) / seg.duration.asMilliseconds()
     previousStart = interval.start.clone()
   }
@@ -141,4 +141,48 @@ $scope.segments.forEach(seg => {
   })
 })
 
+function getFromDate(startDateString) {
+  let targetStatus
+  let targetStart
+  for (let i = $scope.segments.length - 1; i >= 0; i--) {
+    const intervals = $scope.segments[i].intervals
+    for (let j = intervals.length - 1; j >= 0; j--) {
+      const interval = intervals[j]
+      if (interval.start.isSame(startDateString)) {
+        targetStatus = interval.status
+      } else {
+        if (targetStatus && targetStatus !== interval.status) {
+          return targetStart
+        }
+      }
+      targetStart = interval.start
+    }
+  }
+  return targetStart
+}
+
+getFromDate('2019-12-01T05:00:00.000Z')
+
+function getToDate(startDateString) {
+  let targetStatus
+  let targetEnd
+  for (let i = 0; i < $scope.segments.length; i++) {
+    const intervals = $scope.segments[i].intervals
+    for (let j = 0; j < intervals.length; j++) {
+      const interval = intervals[j]
+      if (interval.start.isSame(startDateString)) {
+        targetStatus = interval.status
+      } else {
+        if (targetStatus && targetStatus !== interval.status) {
+          return targetEnd
+        }
+      }
+      targetEnd = interval.end
+    }
+  }
+  // Reaching end
+  return targetEnd
+}
+
+getToDate(' 2019-12-08T19:49:40.213Z')
 debugger
